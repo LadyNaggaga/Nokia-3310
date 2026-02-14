@@ -388,6 +388,7 @@
             drawText(text, x, y, size = 1) {
                 const font = this.getFont();
                 let currentX = x;
+                text = String(text).toUpperCase();
 
                 for (let char of text) {
                     const charData = font[char] || font['?'];
