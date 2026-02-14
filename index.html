@@ -500,6 +500,9 @@
             constructor(display, audio) {
                 this.display = display;
                 this.audio = audio;
+                this.GRID_WIDTH = 20;
+                this.GRID_HEIGHT = 11;
+                this.CELL_SIZE = 4;
                 this.reset();
             }
 
@@ -519,8 +522,8 @@
                 let valid = false;
                 while (!valid) {
                     food = {
-                        x: Math.floor(Math.random() * 20) + 1,
-                        y: Math.floor(Math.random() * 11) + 1
+                        x: Math.floor(Math.random() * this.GRID_WIDTH) + 1,
+                        y: Math.floor(Math.random() * this.GRID_HEIGHT) + 1
                     };
                     valid = true;
                     for (let segment of this.snake) {
@@ -535,7 +538,7 @@
 
             setDirection(dir) {
                 // Prevent reversing
-                if (dir.x !== -this.direction.x || dir.y !== -this.direction.y) {
+                if (dir.x !== -this.direction.x && dir.y !== -this.direction.y) {
                     this.nextDirection = dir;
                 }
             }
@@ -555,7 +558,7 @@
                 };
 
                 // Check wall collision
-                if (head.x < 1 || head.x > 20 || head.y < 1 || head.y > 11) {
+                if (head.x < 1 || head.x > this.GRID_WIDTH || head.y < 1 || head.y > this.GRID_HEIGHT) {
                     this.gameOver = true;
                     this.audio.gameOver();
                     return;
@@ -595,14 +598,14 @@
 
                 // Draw snake
                 for (let segment of this.snake) {
-                    const px = segment.x * 4;
-                    const py = segment.y * 4;
+                    const px = segment.x * this.CELL_SIZE;
+                    const py = segment.y * this.CELL_SIZE;
                     this.display.drawRect(px - 1, py - 1, 3, 3, true);
                 }
 
                 // Draw food
-                const fx = this.food.x * 4;
-                const fy = this.food.y * 4;
+                const fx = this.food.x * this.CELL_SIZE;
+                const fy = this.food.y * this.CELL_SIZE;
                 this.display.drawRect(fx - 1, fy - 1, 3, 3, true);
 
                 if (this.gameOver) {
@@ -745,10 +748,10 @@
                 // Draw Nokia logo
                 this.display.drawText('NOKIA', 28, 5, 1);
 
-                // Draw time (static for demo)
+                // Draw time
                 const now = new Date();
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const hours = now.getHours().toString().padStart(2, '0');
+                const minutes = now.getMinutes().toString().padStart(2, '0');
                 const time = `${hours}:${minutes}`;
                 this.display.drawText(time, 20, 20, 2);
 
